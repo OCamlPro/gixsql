@@ -1,4 +1,4 @@
-﻿using gixsql_tests;
+using gixsql_tests;
 using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace gixsql_tests_nunit
                 }
             }
 
-            int num_results_ok = results.Count(a => a.Value == "KO");
+            int num_results_ok = results.Count(a => a.Value == "OK");
             int num_results_ko = results.Count(a => a.Value == "KO");
 
             int mlen = results.Select(a => a.Key.Length).Max();
