@@ -25,3 +25,7 @@ config.h
 /deploy/checklist.txt
 /redist/msvc/x86
 /redist/msvcrt/x86
+autom4te.cache
+extra_files.mk
+_build
+*~
