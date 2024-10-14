@@ -118,7 +118,7 @@ namespace gixsql_tests
                     }
 
                     Assert.IsFalse(String.IsNullOrWhiteSpace(sql));
-                    
+
 
                     string[] sql_blocks = sql.Split(new string[] { "--" }, StringSplitOptions.RemoveEmptyEntries)
                                                 .ToList().ConvertAll(a => a.Trim()).Where(a => !String.IsNullOrWhiteSpace(a)).ToArray();
@@ -355,7 +355,7 @@ namespace gixsql_tests
 
                         if (!td.CompilerConfiguration.IsVsBased)
                         {
-                            cobc_args += " -lstdc++ -lfmt";
+                            cobc_args += " -lfmt";
                         }
 
                         if (td.AdditionalCompileParams != String.Empty)
@@ -493,7 +493,7 @@ namespace gixsql_tests
                     }
                 }
 
-                
+
 
                 if (TestDataProvider.TestVerbose)
                 {
