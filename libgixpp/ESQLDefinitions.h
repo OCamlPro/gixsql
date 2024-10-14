@@ -22,6 +22,7 @@ USA.
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /*
 	SQL TYPE INFO is a 64 bit unsigned int:
