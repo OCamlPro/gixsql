@@ -1,4 +1,4 @@
-﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Xml;
@@ -18,7 +18,6 @@ namespace gixsql_tests
         public string cobc_homedir { get; private set; }
         public string cobc_bin_dir_path { get; private set; }
         public string cobc_lib_dir_path { get; private set; }
-        public string cobc_config_dir_path { get; private set; }
 
         public string link_lib_dir_path { get; private set; }
         public string link_lib_name { get; private set; }
@@ -67,10 +66,6 @@ namespace gixsql_tests
             cc.cobc_lib_dir_path = xp.SelectSingleNode("lib_dir_path")?.InnerText;
             cc.cobc_lib_dir_path = cc.cobc_lib_dir_path.Replace("${homedir}", cc.cobc_homedir).Replace("${gixdata}", cc.gix_data_dir);
             Assert.IsTrue(Directory.Exists(cc.cobc_lib_dir_path));
-
-            cc.cobc_config_dir_path = xp.SelectSingleNode("config_dir_path")?.InnerText;
-            cc.cobc_config_dir_path = cc.cobc_config_dir_path.Replace("${homedir}", cc.cobc_homedir).Replace("${gixdata}", cc.gix_data_dir);
-            Assert.IsTrue(Directory.Exists(cc.cobc_config_dir_path));
 
             cc.gix_copy_path = Path.Combine(gix_base_path, "lib", "copy");
             Assert.IsTrue(Directory.Exists(cc.gix_copy_path));

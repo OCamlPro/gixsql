@@ -26,10 +26,15 @@
             spdlog
             fmt
             postgresql
+            gmp
           ];
 
           shellHook = ''
-            PATH="${pkgs.gnucobol}/bin:$PATH"
+            export PATH="${pkgs.gnucobol.bin}/bin:$PATH"
+            export LD_LIBRARY_PATH="${pkgs.gnucobol.lib}/lib:$LD_LIBRARY_PATH"
+            export GNUCOBOL_BIN="${pkgs.gnucobol.bin}/bin"
+            export GNUCOBOL_LIB="${pkgs.gnucobol.lib}/lib"
+            export GNUCOBOL_SHARE="${pkgs.gnucobol.bin}/share"
           '';
         };
       };

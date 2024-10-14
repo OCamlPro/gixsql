@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <test-data>
 
 	<tests>
-		
+
 		<test name="TSQL001A" enabled="true">
 			<description>Open connection, cursor</description>
 			<issue-coverage>#000</issue-coverage>
@@ -234,7 +234,7 @@
 			<compile value="true" />
 			<run value="true" />
 
-			<additional-preprocess-params value="-N 2" />
+<!-- 			<additional-preprocess-params value="-N 2" /> -->
 
 			<expected-output>
 				<line>employee #: [+0123]</line>
@@ -2293,7 +2293,7 @@
 			<pre-run-sql-statement data-source-index="1">CREATE TABLE TAB02 (CID INTEGER, FLD CHAR(100))</pre-run-sql-statement>
 			<pre-run-sql-statement data-source-index="1">CREATE TABLE TAB03 (CID INTEGER, FLD CHAR(100))</pre-run-sql-statement>
 			<pre-run-sql-statement data-source-index="1">CREATE TABLE TAB04 (CID INTEGER, FLD CHAR(100))</pre-run-sql-statement>
-			
+
 			<preprocess value="true" />
 			<compile value="true" />
 			<run value="true" />
@@ -2785,7 +2785,7 @@
 			<expected-preprocessed-file-content>
 			</expected-preprocessed-file-content>
 		</test>
-		
+
 		<test name="TSQL037B" enabled="true" applies-to="pgsql">
 			<description>Implementation of updatable cursors (with parameters)</description>
 			<issue-coverage>#000</issue-coverage>
@@ -3223,7 +3223,7 @@
 			<expected-preprocessed-file-content>
 			</expected-preprocessed-file-content>
 		</test>
-	
+
 		<test name="TSQL038A" enabled="false">
 			<description>Implementation of updatable cursors (with parameters)</description>
 			<issue-coverage>#000</issue-coverage>
