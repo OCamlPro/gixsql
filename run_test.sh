@@ -14,13 +14,11 @@ POSTGRE_PWD=${POSTGRE_PWD:=test}
 POSTGRE_DB1=${POSTGRE_DB1:=testdb1}
 POSTGRE_DB2=${POSTGRE_DB2:=testdb2}
 
-GNUCOBOL_DIR=${GNUCOBOL_DIR:=/usr/local/gnucobol}
 TEST_VERBOSITY=${TEST_VERBOSITY:=0}
 TEST_DIR=${TEST_DIR:=/tmp/gixsql-test}
-GIXTEST_LOCAL_CONFIG="$TEST_DIR/config.xml"
+export GIXTEST_LOCAL_CONFIG="$TEST_DIR/config.xml"
 
 INSTALL_PATH="$PWD/$BUILD_DIR/$INSTALL_DIR"
-LD_LIBRARY_PATH="$GNUCOBOL_DIR/lib"
 
 # Build and locally install the project
 if [ ! -f "./extra_files.mk" ]; then
@@ -74,7 +72,6 @@ cat <<EOF >> $TEST_DIR/config.xml
 		<temp-dir>$TEST_DIR</temp-dir>
 		<environment>
 			<variable key="GIXSQL_FIXUP_PARAMS" value="on" />
-			<variable key="LD_LIBRARY_PATH" value="$LD_LIBRARY_PATH" />
 		</environment>
 	</global>
 
@@ -87,9 +84,9 @@ cat <<EOF >> $TEST_DIR/config.xml
 
 	<compilers>
 		<compiler type="gcc" architecture="x64" id="gnucobol-3.1.2-linux-gcc-x64">
-      <bin_dir_path>$GNUCOBOL_DIR/bin</bin_dir_path>
-      <lib_dir_path>$GNUCOBOL_DIR/lib</lib_dir_path>
-			<config_dir_path>$GNUCOBOL_DIR/share/gnucobol/config</config_dir_path>
+      <bin_dir_path>$GNUCOBOL_BIN</bin_dir_path>
+      <lib_dir_path>$GNUCOBOL_LIB</lib_dir_path>
+			<config_dir_path>$GNUCOBOL_SHARE/gnucobol/config</config_dir_path>
 			<environment>
 			</environment>
 		</compiler>

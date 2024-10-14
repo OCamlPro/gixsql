@@ -370,7 +370,6 @@ namespace gixsql_tests
                            .WithArguments(cobc_args)
                            .WithEnvironmentVariables(new Dictionary<string, string>
                            {
-                               ["COB_CONFIG_DIR"] = cc.cobc_config_dir_path,
                                ["PATH"] = Environment.GetEnvironmentVariable("PATH") + $"{Path.PathSeparator}{cc.cobc_bin_dir_path}"
                            })
                            .WithValidation(CommandResultValidation.None)

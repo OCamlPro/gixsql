@@ -1,4 +1,4 @@
-﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Xml;
@@ -12,7 +12,6 @@ namespace gixsql_tests
 
         public string cobc_bin_dir_path { get; private set; }
         public string cobc_lib_dir_path { get; private set; }
-        public string cobc_config_dir_path { get; private set; }
 
         public string gixsql_bin_path { get; private set; }
         public string gixsql_lib_path { get; private set; }
@@ -50,9 +49,6 @@ namespace gixsql_tests
                 cc.cobc_lib_dir_path = Environment.ExpandEnvironmentVariables(xc.SelectSingleNode("lib_dir_path")?.InnerText);
                 if (!Directory.Exists(cc.cobc_lib_dir_path)) throw new Exception(cc.cobc_lib_dir_path);
 
-                cc.cobc_config_dir_path = Environment.ExpandEnvironmentVariables(xc.SelectSingleNode("config_dir_path")?.InnerText);
-                if (!Directory.Exists(cc.cobc_config_dir_path)) throw new Exception(cc.cobc_config_dir_path);
-
                 if (isWindows)
                     cc.gixsql_copy_path = Path.Combine(gix_base_path, "lib", "copy");
                 else
@@ -61,8 +57,8 @@ namespace gixsql_tests
                 if (!Directory.Exists(cc.gixsql_copy_path)) throw new Exception(cc.gixsql_copy_path);
                 if (!File.Exists(Path.Combine(cc.gixsql_copy_path, "SQLCA.cpy"))) throw new Exception();
 
-                cc.gixsql_bin_path = Path.Combine(gix_base_path, "bin"); 
-                
+                cc.gixsql_bin_path = Path.Combine(gix_base_path, "bin");
+
                 cc.gixsql_lib_path = Path.Combine(gix_base_path, "lib");
                 if (isWindows)
                     cc.gixsql_link_lib_dir_path = Path.Combine(cc.gixsql_lib_path, compiler_arch, compiler_type);
