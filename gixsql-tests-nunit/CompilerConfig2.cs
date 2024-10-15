@@ -84,7 +84,7 @@ namespace gixsql_tests
                 }
                 else
                 {
-                    cc.gixpp_exe = Path.Combine(cc.gixsql_bin_path, "gixpp");
+                    cc.gixpp_exe = "/opt/superbol-free-linux-x64";
                     if (!File.Exists(cc.gixpp_exe)) throw new Exception(cc.gixpp_exe);
 
                     cc.cobc_exe = Path.Combine(cc.cobc_bin_dir_path, "cobc");
