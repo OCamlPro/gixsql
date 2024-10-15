@@ -11,22 +11,25 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devShells.default = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            automake
+            autoconf
+            libtool
+            pkg-config
+            spdlog
+            unixODBC
+            libmysqlclient
+            postgresql
+            gmp
+          ];
+
           packages = with pkgs; [
             gnucobol
             clang-tools
             cppcheck
-            automake
-            autoconf
-            libtool
             gnum4
             dotnetCorePackages.sdk_6_0_1xx
             flex
-            unixODBC
-            mariadb
-            spdlog
-            fmt
-            postgresql
-            gmp
           ];
 
           shellHook = ''

@@ -86,7 +86,6 @@ cat <<EOF >> $TEST_DIR/config.xml
 		<compiler type="gcc" architecture="x64" id="gnucobol-3.1.2-linux-gcc-x64">
       <bin_dir_path>$GNUCOBOL_BIN</bin_dir_path>
       <lib_dir_path>$GNUCOBOL_LIB</lib_dir_path>
-			<config_dir_path>$GNUCOBOL_SHARE/gnucobol/config</config_dir_path>
 			<environment>
 			</environment>
 		</compiler>

@@ -20,6 +20,7 @@ USA.
 
 #include "DbInterfaceSQLite.h"
 
+#include <algorithm>
 #include <cstring>
 #include "IConnection.h"
 #include "Logger.h"
@@ -82,7 +83,7 @@ int DbInterfaceSQLite::connect(std::shared_ptr<IDataSourceInfo> _conn_info, std:
 		}
 	}
 
-	// Autocommit is set to off. Since PostgreSQL is ALWAYS in autocommit mode 
+	// Autocommit is set to off. Since PostgreSQL is ALWAYS in autocommit mode
 	// we will optionally start a transaction
 	if (_conn_opts->autocommit == AutoCommitMode::Off) {
 		lib_logger->trace(FMT_FILE_FUNC "SQLite::connect: autocommit is off, starting initial transaction", __FILE__, __func__);

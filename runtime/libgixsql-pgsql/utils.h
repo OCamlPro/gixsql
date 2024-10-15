@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #define SIGN_LENGTH 1
 #define TERMINAL_LENGTH 1

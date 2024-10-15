@@ -345,17 +345,11 @@ namespace gixsql_tests
                         if (td.CompilerConfiguration.IsVsBased)
                             cobc_args = $"/C \"{compiler_init_cmd} && {cc.cobc_exe} {opt_exe} -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
                         else
-                            cobc_args = $"{cc.cobc_exe} {opt_exe} -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
+                            cobc_args = $"{cc.cobc_exe} {opt_exe} -DSPDLOG_COMPILED_LIB -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
 
                         if (TestDataProvider.TestVerbose)
                         {
                             Console.WriteLine($"[cobc]: {TestDataProvider.Shell} {cobc_args}");
-                        }
-
-
-                        if (!td.CompilerConfiguration.IsVsBased)
-                        {
-                            cobc_args += " -lfmt";
                         }
 
                         if (td.AdditionalCompileParams != String.Empty)

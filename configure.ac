@@ -1,10 +1,8 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
-
 AC_PREREQ([2.69])
-AC_INIT([gixsql], ['1.0.21dev'], [m.ridoni@mediumgray.info])
+AC_INIT([gixsql], [1.0.21dev], [m.ridoni@mediumgray.info])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([1.9.6 -Wall -Werror dist-bzip2 subdir-objects])
 
 # Checks for programs.
@@ -15,10 +13,9 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
 AM_PROG_AR
 AC_PROG_YACC
-AC_PROG_LEX
+AC_PROG_LEX([noyywrap])
 
 LT_INIT
 AC_SUBST([LIBTOOL_DEPS])
@@ -40,7 +37,7 @@ AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 AC_CHECK_TYPES([ptrdiff_t])
 
-# AC_CANONICAL_HOST is needed to access the 'host_os' variable    
+# AC_CANONICAL_HOST is needed to access the 'host_os' variable
 AC_CANONICAL_HOST
 
 build_linux=no
@@ -69,7 +66,8 @@ AM_CONDITIONAL([BUILD_WINDOWS], [test "$build_windows" = "yes"])
 AM_CONDITIONAL([BUILD_OSX], [test "$build_mac" = "yes"])
 
 # Checks for libraries.
-PKG_PROG_PKG_CONFIG
+PKG_CHECK_MODULES([SPDLOG], [spdlog])
+PKG_CHECK_MODULES([FMT], [fmt])
 
 AC_ARG_ENABLE([mysql],
   [AS_HELP_STRING([--enable-mysql], [Enable MySQL support @<:@yes@:>@])])
@@ -79,12 +77,12 @@ AC_ARG_ENABLE([odbc],
 
 AC_ARG_ENABLE([pgsql],
   [AS_HELP_STRING([--enable-pgsql], [Enable PostgreSQL support @<:@yes@:>@])])
-  
+
 AC_ARG_ENABLE([oracle],
   [AS_HELP_STRING([--enable-oracle], [Enable Oracle support @<:@yes@:>@])])
 
 AC_ARG_ENABLE([sqlite],
-  [AS_HELP_STRING([--enable-sqlite], [Enable SQLite support @<:@yes@:>@])])  
+  [AS_HELP_STRING([--enable-sqlite], [Enable SQLite support @<:@yes@:>@])])
 
 AC_ARG_WITH([default-driver],
 	[AS_HELP_STRING([--with-default-driver[=none|odbc|mysql|pgsql|oracle|sqlite]],
@@ -138,7 +136,6 @@ AS_IF([test "$with_default_driver" == "none" || test "$with_default_driver" == "
 		[AC_MSG_ERROR([invalid DBMS driver id \"${with_default_driver}\".])]
 )
 
-
 num_drivers=0
 cur_driver=
 AS_IF([test "$enable_odbc" = "yes"],   [ ((num_drivers++)) ; cur_driver=odbc  ])
@@ -185,7 +182,6 @@ AM_CONDITIONAL([ENABLE_ODBC],   [test "$enable_odbc" = "yes"])
 AM_CONDITIONAL([ENABLE_PGSQL],  [test "$enable_pgsql" = "yes"])
 AM_CONDITIONAL([ENABLE_ORACLE], [test "$enable_oracle" = "yes"])
 AM_CONDITIONAL([ENABLE_SQLITE], [test "$enable_sqlite" = "yes"])
-
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
