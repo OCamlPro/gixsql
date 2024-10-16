@@ -28,6 +28,8 @@ namespace gixsql_tests
         public static CompilerConfig2 init(XmlElement xc)
         {
             bool isWindows = !File.Exists(@"/proc/sys/kernel/ostype");
+            bool isLegacyPreprocessor =
+              Environment.GetEnvironmentVariable("LEGACY_PP") != null;
 
             try
             {
@@ -84,7 +86,15 @@ namespace gixsql_tests
                 }
                 else
                 {
-                    cc.gixpp_exe = "/opt/superbol-free-linux-x64";
+                    if (isLegacyPreprocessor)
+                    {
+                      cc.gixpp_exe = Path.Combine(cc.gixsql_bin_path, "gixpp");
+                    }
+                    else
+                    {
+                      cc.gixpp_exe = "/opt/superbol-free-linux-x64";
+                    }
+
                     if (!File.Exists(cc.gixpp_exe)) throw new Exception(cc.gixpp_exe);
 
                     cc.cobc_exe = Path.Combine(cc.cobc_bin_dir_path, "cobc");

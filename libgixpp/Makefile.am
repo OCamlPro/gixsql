@@ -20,7 +20,6 @@ libgixpp_a_SOURCES =\
   TPESQLCommon.h\
   TPESQLCommon.cpp\
   GixEsqlLexer.hh\
-  gix_esql_parser.hh\
   GixPreProcessor.h\
   ITransformationStep.h\
   libgixpp_global.h\
@@ -41,12 +40,20 @@ libgixpp_a_SOURCES =\
 libgixpp_a_CXXFLAGS = -std=c++17 -I.. -I$(top_srcdir)/common -I$(top_srcdir)/libcpputils -I$(top_srcdir)/build-tools/grammar-tools -I$(top_srcdir)/common
 
 # sources to be build first (we actually want the bison generated headers)
-BUILT_SOURCES = gix_esql_parser.cc
+BUILT_SOURCES = gix_esql_parser.cc gix_esql_scanner.cc
 
 # all generated source files, preventing the need for the user to have bison/flex installed
-EXTRA_DIST = gix_esql_parser.cc gix_esql_parser.hh location.hh gix_esql_scanner.cc
+EXTRA_DIST =\
+  gix_esql_parser.cc\
+  gix_esql_parser.hh\
+  gix_esql_scanner.cc\
+  location.hh
 
-AM_YFLAGS = -Wno-yacc -Wall -o gix_esql_parser.cc --defines=gix_esql_parser.hh
-AM_LFLAGS = -c++ -v --debug -o "gix_esql_scanner.cc"
+AM_YFLAGS = -Wno-yacc -Wall --header=gix_esql_parser.hh
+AM_LFLAGS = -c++ -o "gix_esql_scanner.cc"
 
-MAINTAINERCLEANFILES = gix_esql_parser.cc gix_esql_parser.hh location.hh gix_esql_scanner.cc
+AINTAINERCLEANFILES =\
+  gix_esql_parser.cc\
+  gix_esql_parser.hh\
+  location.hh\
+  gix_esql_scanner.cc

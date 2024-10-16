@@ -242,7 +242,20 @@ namespace gixsql_tests
                         if (client_pp_params == null)
                             client_pp_params = String.Empty;
                     }
-                    string gixpp_args = $"sql preproc --test-ext -I. -I{cc.gixsql_copy_path} --copybooks {msrc}";
+
+                    // Choose the right preprocessor according to the
+                    // environment variable `LEGACY_PP`.
+                    bool isLegacyPreprocessor =
+                      Environment.GetEnvironmentVariable("LEGACY_PP") != null;
+                    string gixpp_args = String.Empty;
+                    if (isLegacyPreprocessor) {
+                      gixpp_args = $"-e -v -S -I. -I{cc.gixsql_copy_path} -i {msrc} -o {pp_file} {client_pp_params}";
+                    }
+                    else
+                    {
+                      gixpp_args = $"sql preproc --test-ext -I. -I{cc.gixsql_copy_path} --copybooks {msrc}";
+                    }
+
                     if (td.AdditionalPreProcessParams != String.Empty)
                         gixpp_args += (" " + td.AdditionalPreProcessParams);
 
