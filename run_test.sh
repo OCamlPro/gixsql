@@ -29,7 +29,6 @@ TEST_VERBOSITY=${TEST_VERBOSITY:=0}
 # These parameters are exported for the test runner
 export GIXTEST_LOCAL_CONFIG="$OUTPUT_DIR/config.xml"
 
-INSTALL_PATH="$PWD/$INSTALL_DIR"
 PG_DIR="$OUTPUT_DIR/pg"
 
 finalizer
@@ -64,7 +63,7 @@ if [ ! -d "$INSTALL_DIR" ]; then
 fi
 
 autoreconf -if > /dev/null
-./configure --prefix="$INSTALL_PATH" --disable-mysql \
+./configure --prefix="$INSTALL_DIR" --disable-mysql \
   --disable-odbc --disable-sqlite --disable-oracle > /dev/null
 make -j 8 > /dev/null
 make install > /dev/null
@@ -77,7 +76,7 @@ cat <<EOF >> "$OUTPUT_DIR/config.xml"
 <test-local-config>
 
 	<global>
-    <gixsql-install-base>$INSTALL_PATH</gixsql-install-base>
+    <gixsql-install-base>$INSTALL_DIR</gixsql-install-base>
 		<keep-temps>1</keep-temps>
 		<verbose>$TEST_VERBOSITY</verbose>
 		<test-filter></test-filter>
