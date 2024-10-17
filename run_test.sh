@@ -1,17 +1,27 @@
-#!/bin/env bash
-set -o errexit
-set -o nounset
-set -o pipefail
+#!/bin/env sh
+set -eu
 
 # Default configuration
 INSTALL_DIR="$PWD/_install"
 OUTPUT_DIR="$PWD/_output"
 
+finalizer () {
+  # Ensure that we try to stop the server even if the script failed
+  if [ -d "$OUTPUT_DIR" ]; then
+    cat "$OUTPUT_DIR/pg.log"
+    echo "Stop PostgreSQL server"
+    pg_ctl -D "$PG_DIR" stop || true
+    rm -rf "$OUTPUT_DIR"
+  fi
+}
+
+trap "finalizer" EXIT
+
 # These parameters are exported for PostgreSQL tools
-export PGHOST=${POSTGRE_HOST:=localhost}
-export PGPORT=${POSTGRE_PORT:=5432}
-export PGUSER=${POSTGRE_USER:=test}
-export PGPASSWORD=${PGPASSWORD:=test}
+export PGHOST="${POSTGRE_HOST:=localhost}"
+export PGPORT="${POSTGRE_PORT:=666}"
+export PGUSER="${POSTGRE_USER:=test}"
+export PGPASSWORD="${PGPASSWORD:=test}"
 
 PGDB1=${POSTGRE_DB1:=testdb1}
 PGDB2=${POSTGRE_DB2:=testdb2}
@@ -23,10 +33,7 @@ export GIXTEST_LOCAL_CONFIG="$OUTPUT_DIR/config.xml"
 INSTALL_PATH="$PWD/$INSTALL_DIR"
 PG_DIR="$OUTPUT_DIR/pg"
 
-if [ -d "$OUTPUT_DIR" ]; then
-  pg_ctl -D "$PG_DIR" stop || true
-  rm -rf "$OUTPUT_DIR"
-fi
+finalizer
 mkdir "$OUTPUT_DIR"
 
 # Configure and start PostgreSQL
@@ -41,9 +48,8 @@ port = $PGPORT
 EOF
 
 pg_ctl -D "$PG_DIR" -l "$OUTPUT_DIR/pg.log" start
-createdb $PGDB1
-createdb $PGDB2
-pg_ctl -D "$PG_DIR" status
+createdb "$PGDB1"
+createdb "$PGDB2"
 
 # Build and locally install the project
 if [ ! -f "./extra_files.mk" ]; then
