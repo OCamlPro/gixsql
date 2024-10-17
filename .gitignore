@@ -9,6 +9,15 @@ config.h
 stamp-h1
 libtool
 aclocal.m4
+INSTALL
+ar-lib
+compile
+depcomp
+install-sh
+ltmain.sh
+m4/*
+missing
+ylwrap
 
 # Generated files by the compiler
 **/*.o
