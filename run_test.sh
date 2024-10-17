@@ -4,8 +4,7 @@ set -o nounset
 set -o pipefail
 
 # Default configuration
-BUILD_DIR=${BUILD_DIR:=./_build}
-INSTALL_DIR=${INSTALL_DIR:=install}
+INSTALL_DIR=${INSTALL_DIR:=_install}
 
 POSTGRE_HOST=${POSTGRE_HOST:=localhost}
 POSTGRE_PORT=${POSTGRE_PORT:=5432}
@@ -18,30 +17,24 @@ TEST_VERBOSITY=${TEST_VERBOSITY:=0}
 TEST_DIR=${TEST_DIR:=/tmp/gixsql-test}
 export GIXTEST_LOCAL_CONFIG="$TEST_DIR/config.xml"
 
-INSTALL_PATH="$PWD/$BUILD_DIR/$INSTALL_DIR"
+INSTALL_PATH="$PWD/$INSTALL_DIR"
 
 # Build and locally install the project
 if [ ! -f "./extra_files.mk" ]; then
   touch "extra_files.mk"
 fi
 
-if [ ! -d "$BUILD_DIR" ]; then
-  mkdir "$BUILD_DIR"
-  echo "Create directory $BUILD_DIR"
-fi
-
 echo "Compiling gixsql..."
-cd $BUILD_DIR
 
 if [ ! -d "$INSTALL_DIR" ]; then
   mkdir "$INSTALL_DIR"
   echo "Install gixsql in $INSTALL_PATH"
 fi
 
-../configure --prefix="$INSTALL_PATH" > /dev/null
-make -j 8 > /dev/null
-make install > /dev/null
-cd ..
+autoreconf -if
+./configure --prefix="$INSTALL_PATH"
+make -j 8
+make install
 
 echo "Preparing tests..."
 if [ -d "$TEST_DIR" ]; then

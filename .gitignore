@@ -1,23 +1,49 @@
-packages
-deploy/redist
-**/*.bak
+# Generated files by autotools
+**/Makefile
+**/Makefile.in
+**/*.log
+autom4te.cache
+configure
+config.status
+config.h
+stamp-h1
+libtool
+aclocal.m4
+INSTALL
+ar-lib
+compile
+depcomp
+install-sh
+ltmain.sh
+m4/*
+missing
+ylwrap
+
+# Generated files by the compiler
 **/*.o
 **/*.lo
 **/*.la
 **/*.a
 **/*.deps
 **/*.libs
-**/*.log
+gixpp/gixpp
+runtime/libgixsql-oracle/odpi/.dirstamp
+
+# Generated files by Bison/Flex
 libgixpp/gix_esql_parser.cc
 libgixpp/gix_esql_parser.hh
 libgixpp/gix_esql_scanner.cc
 libgixpp/location.hh
-**/Makefile.in
-aclocal.m4
-configure
-config.status
-config.h
+
+# Generated files by editors
+**/*~
+**/*.bak
 .vs
+
+# Others
+_install
+packages
+deploy/redist
 **/Win32
 **/x64
 */bin
@@ -25,7 +51,4 @@ config.h
 /deploy/checklist.txt
 /redist/msvc/x86
 /redist/msvcrt/x86
-autom4te.cache
 extra_files.mk
-_build
-*~

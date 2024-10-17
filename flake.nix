@@ -30,6 +30,7 @@
             gnum4
             dotnetCorePackages.sdk_6_0_1xx
             flex
+            bison
           ];
 
           shellHook = ''
