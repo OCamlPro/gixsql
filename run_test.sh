@@ -8,7 +8,7 @@ OUTPUT_DIR="$PWD/_output"
 finalizer () {
   # Ensure that we try to stop the server even if the script failed
   if [ -d "$OUTPUT_DIR" ]; then
-    cat "$OUTPUT_DIR/pg.log"
+    cat "$OUTPUT_DIR/pg.log" || true
     echo "Stop PostgreSQL server"
     pg_ctl -D "$PG_DIR" stop || true
     rm -rf "$OUTPUT_DIR"
@@ -19,7 +19,7 @@ trap "finalizer" EXIT
 
 # These parameters are exported for PostgreSQL tools
 export PGHOST="${POSTGRE_HOST:=localhost}"
-export PGPORT="${POSTGRE_PORT:=666}"
+export PGPORT="${POSTGRE_PORT:=6666}"
 export PGUSER="${POSTGRE_USER:=test}"
 export PGPASSWORD="${PGPASSWORD:=test}"
 
