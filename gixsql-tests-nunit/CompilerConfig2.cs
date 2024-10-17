@@ -30,6 +30,8 @@ namespace gixsql_tests
             bool isWindows = !File.Exists(@"/proc/sys/kernel/ostype");
             bool isLegacyPreprocessor =
               Environment.GetEnvironmentVariable("LEGACY_PP") != null;
+            string superbolPreprocessor =
+              Environment.GetEnvironmentVariable("SUPERBOL_PP");
 
             try
             {
@@ -92,7 +94,7 @@ namespace gixsql_tests
                     }
                     else
                     {
-                      cc.gixpp_exe = "/opt/superbol-free-linux-x64";
+                      cc.gixpp_exe = superbolPreprocessor;
                     }
 
                     if (!File.Exists(cc.gixpp_exe)) throw new Exception(cc.gixpp_exe);
