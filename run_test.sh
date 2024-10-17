@@ -8,7 +8,6 @@ OUTPUT_DIR="$PWD/_output"
 finalizer () {
   # Ensure that we try to stop the server even if the script failed
   if [ -d "$OUTPUT_DIR" ]; then
-    cat "$OUTPUT_DIR/pg.log" || true
     echo "Stop PostgreSQL server"
     pg_ctl -D "$PG_DIR" stop || true
     rm -rf "$OUTPUT_DIR"
@@ -39,7 +38,7 @@ mkdir "$OUTPUT_DIR"
 # Configure and start PostgreSQL
 echo "test" >> "$OUTPUT_DIR/pg_password"
 initdb -U "$PGUSER" -D "$PG_DIR" \
-  --pwfile="$OUTPUT_DIR/pg_password"
+  --pwfile="$OUTPUT_DIR/pg_password" > /dev/null
 
 cat <<EOF >> "$PG_DIR/postgresql.conf"
 listen_addresses = '$PGHOST'
@@ -47,29 +46,30 @@ unix_socket_directories = '.'
 port = $PGPORT
 EOF
 
+echo "start PostgreSQL server"
 pg_ctl -D "$PG_DIR" -l "$OUTPUT_DIR/pg.log" start
-createdb "$PGDB1"
-createdb "$PGDB2"
+echo "create databases"
+createdb "$PGDB1" > /dev/null
+createdb "$PGDB2" > /dev/null
 
 # Build and locally install the project
 if [ ! -f "./extra_files.mk" ]; then
   touch "extra_files.mk"
 fi
 
-echo "Compiling gixsql..."
+echo "compiling gixsql..."
 
 if [ ! -d "$INSTALL_DIR" ]; then
   mkdir "$INSTALL_DIR"
-  echo "Install gixsql in $INSTALL_PATH"
 fi
 
-autoreconf -if
+autoreconf -if > /dev/null
 ./configure --prefix="$INSTALL_PATH" --disable-mysql \
-  --disable-odbc --disable-sqlite --disable-oracle
-make -j 8
-make install
+  --disable-odbc --disable-sqlite --disable-oracle > /dev/null
+make -j 8 > /dev/null
+make install > /dev/null
 
-echo "Preparing tests..."
+echo "preparing tests..."
 
 # Output the configuration file for the runner
 cat <<EOF >> "$OUTPUT_DIR/config.xml"
@@ -136,9 +136,9 @@ cat <<EOF >> "$OUTPUT_DIR/config.xml"
 </test-local-config>
 EOF
 
-echo "Building runner..."
+echo "building runner..."
 # We have to rebuild the test runner because it includes test files...
-dotnet build "gixsql-tests-nunit/gixsql-tests-nunit.csproj"
+dotnet build "gixsql-tests-nunit/gixsql-tests-nunit.csproj" > /dev/null
 
 # Start the runner
 dotnet "gixsql-tests-nunit/bin/Debug/net6.0/gixsql-tests-nunit.dll"

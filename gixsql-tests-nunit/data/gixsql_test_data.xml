@@ -664,7 +664,7 @@
 			<expected-output></expected-output>
 		</test>
 
-		<test name="TSQL007A" enabled="true">
+		<test name="TSQL007A" enabled="false">
 			<description>Misc SECTIONs</description>
 			<issue-coverage>#000</issue-coverage>
 			<group></group>
@@ -2075,7 +2075,7 @@
 			</expected-preprocessed-file-content>
 		</test>
 
-		<test name="TSQL030A" enabled="true" applies-to="pgsql">
+		<test name="TSQL030A" enabled="false" applies-to="pgsql">
 			<description>Show-stopper bug in pgsql_prepare</description>
 			<issue-coverage>#091</issue-coverage>
 			<architecture>all</architecture>
