@@ -42,6 +42,7 @@ libgixpp/location.hh
 
 # Others
 _install
+_output
 packages
 deploy/redist
 **/Win32
