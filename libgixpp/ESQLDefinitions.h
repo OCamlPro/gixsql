@@ -22,6 +22,7 @@ USA.
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /*
 	SQL TYPE INFO is a 64 bit unsigned int:
@@ -112,7 +113,7 @@ struct esql_connection_info_t
 	hostref_or_literal_t *data_source = nullptr;
 	hostref_or_literal_t *username = nullptr;
 	hostref_or_literal_t *password = nullptr;
-	
+
 	// for compatibility
 	hostref_or_literal_t *dbname = nullptr;
 };
@@ -238,7 +239,7 @@ struct connect_to_info_t
 };
 
 // This will disappear when the standalone debugger will be the only option
-// For now this quick hack prevents compilation errors and having to 
+// For now this quick hack prevents compilation errors and having to
 // refactor this into an external file
 #ifndef _GIXPP_BLOCK_
 #define _GIXPP_BLOCK_
@@ -261,7 +262,7 @@ struct PreprocessedBlockInfo {
 	int pp_end_line = 0;
 	int pp_gen_start_line = 0;
 	int pp_gen_end_line = 0;
-	
+
 	PreprocessedBlockType type;
 
 	std::string command;

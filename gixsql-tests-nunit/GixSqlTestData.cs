@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +27,7 @@ namespace gixsql_tests
         public bool ExpectedToFailRun = false;
 
         public CompilerConfig2 CompilerConfiguration;
-        
+
         public List<Tuple<int, string>> PreRunSQLFile = new List<Tuple<int, string>>();
         public List<Tuple<int, Tuple<string, List<string>>>> PreRunSQLStatement = new List<Tuple<int, Tuple<string, List<string>>>>();
         public List<Tuple<int, string>> PreRunDropTable = new List<Tuple<int, string>>();

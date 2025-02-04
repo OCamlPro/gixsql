@@ -118,7 +118,7 @@ namespace gixsql_tests
                     }
 
                     Assert.IsFalse(String.IsNullOrWhiteSpace(sql));
-                    
+
 
                     string[] sql_blocks = sql.Split(new string[] { "--" }, StringSplitOptions.RemoveEmptyEntries)
                                                 .ToList().ConvertAll(a => a.Trim()).Where(a => !String.IsNullOrWhiteSpace(a)).ToArray();
@@ -242,7 +242,20 @@ namespace gixsql_tests
                         if (client_pp_params == null)
                             client_pp_params = String.Empty;
                     }
-                    string gixpp_args = $"-e -v -S -I. -I{cc.gixsql_copy_path} -i {msrc} -o {pp_file} {client_pp_params}";
+
+                    // Choose the right preprocessor according to the
+                    // environment variable `LEGACY_PP`.
+                    bool isLegacyPreprocessor =
+                      Environment.GetEnvironmentVariable("LEGACY_PP") != null;
+                    string gixpp_args = String.Empty;
+                    if (isLegacyPreprocessor) {
+                      gixpp_args = $"-e -v -S -I. -I{cc.gixsql_copy_path} -i {msrc} -o {pp_file} {client_pp_params}";
+                    }
+                    else
+                    {
+                      gixpp_args = $"sql preproc --test-ext -I. -I{cc.gixsql_copy_path} --copybooks {msrc}";
+                    }
+
                     if (td.AdditionalPreProcessParams != String.Empty)
                         gixpp_args += (" " + td.AdditionalPreProcessParams);
 
@@ -345,17 +358,11 @@ namespace gixsql_tests
                         if (td.CompilerConfiguration.IsVsBased)
                             cobc_args = $"/C \"{compiler_init_cmd} && {cc.cobc_exe} {opt_exe} -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
                         else
-                            cobc_args = $"{cc.cobc_exe} {opt_exe} -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
+                            cobc_args = $"{cc.cobc_exe} {opt_exe} -DSPDLOG_COMPILED_LIB -I. -I{cc.gixsql_copy_path} {pp_file} -L{cc.gixsql_link_lib_dir_path} -l{cc.gixsql_link_lib_lname}";
 
                         if (TestDataProvider.TestVerbose)
                         {
                             Console.WriteLine($"[cobc]: {TestDataProvider.Shell} {cobc_args}");
-                        }
-
-
-                        if (!td.CompilerConfiguration.IsVsBased)
-                        {
-                            cobc_args += " -lstdc++ -lfmt";
                         }
 
                         if (td.AdditionalCompileParams != String.Empty)
@@ -370,7 +377,6 @@ namespace gixsql_tests
                            .WithArguments(cobc_args)
                            .WithEnvironmentVariables(new Dictionary<string, string>
                            {
-                               ["COB_CONFIG_DIR"] = cc.cobc_config_dir_path,
                                ["PATH"] = Environment.GetEnvironmentVariable("PATH") + $"{Path.PathSeparator}{cc.cobc_bin_dir_path}"
                            })
                            .WithValidation(CommandResultValidation.None)
@@ -493,7 +499,7 @@ namespace gixsql_tests
                     }
                 }
 
-                
+
 
                 if (TestDataProvider.TestVerbose)
                 {

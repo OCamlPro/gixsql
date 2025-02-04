@@ -21,6 +21,7 @@
 #ifndef OCDBUTIL_H
 #define OCDBUTIL_H
 
+#include <algorithm>
 #include <string>
 #include <vector>
 

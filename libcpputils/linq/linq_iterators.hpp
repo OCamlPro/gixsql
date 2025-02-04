@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#include <iterator>
 #if !defined(CPPLINQ_LINQ_ITERATORS_HPP)
 #define CPPLINQ_LINQ_ITERATORS_HPP
 #pragma once
@@ -71,8 +72,8 @@ namespace cpplinq {
         >::type
     operator>=(const Iter& it, const Iter& it2) {
         return !(it < it2);
-    }   
-    
+    }
+
     namespace util {
         template <class Iter, class T>
         typename std::iterator_traits<Iter>::pointer deref_iterator(const Iter& it) {
@@ -88,9 +89,9 @@ namespace cpplinq {
         util::value_ptr<T> deref_iterator(const Iter& it, util::identity<T>) {
             return util::value_ptr<T>(*it);
         }
-    } 
-    
-    
+    }
+
+
     template <class Iter>
     class iter_range
     {
@@ -113,16 +114,20 @@ namespace cpplinq {
 
     // decays into a onepass/forward iterator
     template <class Cursor>
-    class cursor_iterator 
-        : public std::iterator<std::forward_iterator_tag, 
-                typename Cursor::element_type,
-                std::ptrdiff_t,
-                typename std::conditional<std::is_reference<typename Cursor::reference_type>::value,
-                                          typename std::add_pointer<typename Cursor::element_type>::type,
-                                          util::value_ptr<typename Cursor::element_type>>::type,
-                typename Cursor::reference_type>
+    class cursor_iterator
     {
     public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = typename Cursor::element_type;
+        using difference_type = std::ptrdiff_t;
+        using pointer =
+          typename std::conditional<
+            std::is_reference<typename Cursor::reference_type>::value,
+            typename std::add_pointer<typename Cursor::element_type>::type,
+            util::value_ptr<typename Cursor::element_type>
+          >::type;
+        using reference = typename Cursor::reference_type;
+
         CPPLINQ_USE_DEFAULT_ITERATOR_OPERATORS;
 
         cursor_iterator(Cursor cur) : cur(cur) {
@@ -143,7 +148,7 @@ namespace cpplinq {
             auto& v = **this;
             return &v;
         }
-        
+
         cursor_iterator& operator++() {
             cur->inc();
 
@@ -159,7 +164,7 @@ namespace cpplinq {
         }
 
 
-        
+
     private:
         bool empty() const {
             return !cur || cur->empty();
@@ -176,7 +181,7 @@ namespace cpplinq {
     public:
         typedef cursor_iterator<typename Container::cursor> iterator;
 
-        container_range(Container c) : c(c) 
+        container_range(Container c) : c(c)
         {
         }
 

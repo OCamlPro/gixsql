@@ -1116,6 +1116,26 @@ SUBSYSTEM "SQL"|"CICS"|"DLI"
 		return yy::gix_esql_parser::make_HOSTVARIANTBEGIN(loc);
     }
 
+    "EXEC"[ ]+"SQL"[\r\n][ ]+"BEGIN"[ ]+"DECLARE"[ ]+"SECTION"[\r\n][ ]+"END-EXEC"[ ]*(".")? {
+		driver->startlineno = yylineno - 2;
+		driver->endlineno = yylineno;
+		driver->host_reference_list->clear();
+		driver->res_host_reference_list->clear();
+
+		driver->commandname = "HOST_BEGIN";		
+		driver->cursorname = "";
+		driver->sqlname = "";
+		driver->incfilename = "";
+
+		driver->period = yytext[strlen(yytext)-1] == '.' ? 1 : 0;
+
+		driver->hostreferenceCount = 0;
+		driver->command_putother = 0;
+		driver->sql_list->clear();
+
+		return yy::gix_esql_parser::make_HOSTVARIANTBEGIN(loc);
+    }
+
     "EXEC"[ ]+"SQL"[ ]+"END"[ ]+"DECLARE"[ ]+"SECTION"[ ]+"END-EXEC"[ ]*(".")? {
 		driver->startlineno = yylineno;
 		driver->endlineno = yylineno;
