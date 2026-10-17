@@ -540,6 +540,16 @@ bool TPESQLProcessor::put_cursor_declarations()
 	put_output_line(code_tag + "*");
 	put_output_line(code_tag + "*   ESQL CURSOR DECLARATIONS (START)");
 
+	// This block is appended at the very end of the generated PROCEDURE
+	// DIVISION, after whatever paragraph happens to be last in the user's
+	// source. Without a paragraph boundary of its own, the GO TO below
+	// would still be textually part of that last paragraph: every time it
+	// is PERFORMed, control would fall through into this block, jump to
+	// GIX-SKIP-CRSR-INIT (the last label in the program) and then fall off
+	// the end of PROCEDURE DIVISION - triggering an implicit program exit
+	// instead of returning to the PERFORM caller. A dedicated leading
+	// paragraph name closes off the preceding paragraph correctly.
+	put_output_line(AREA_A_CPREFIX "GIXSQL-CRSR-INIT-BLOCK.");
 	put_output_line(std::string(_areab) + "GO TO GIX-SKIP-CRSR-INIT.");
 
 	auto cursor_list = startup_items;
@@ -987,7 +997,14 @@ bool TPESQLProcessor::handle_esql_stmt(const ESQL_Command cmd, const cb_exec_sql
 					pp_call.addParameter(pp_scale > 0 ? -pp_scale : 0, BY_VALUE);
 					pp_call.addParameter(pp_flags, BY_VALUE);
 					pp_call.addParameter(pp->sname, BY_REFERENCE);
-					pp_call.addParameter(0, BY_REFERENCE);
+					// No indicator for this host variable: pass a true
+					// NULL pointer (BY VALUE 0), not BY REFERENCE 0 (the
+					// address of the literal 0). createCobolData() writes
+					// a 2-byte indicator value through this pointer
+					// whenever it is non-null; with BY REFERENCE it
+					// dereferenced GnuCOBOL's shared literal-0 storage
+					// instead, corrupting it on every fetch.
+					pp_call.addParameter(0, BY_VALUE);
 
 					if (!put_call(pp_call, false))
 						return false;
@@ -1017,7 +1034,8 @@ bool TPESQLProcessor::handle_esql_stmt(const ESQL_Command cmd, const cb_exec_sql
 				if (has_indicator)
 					rp_call.addParameter(ind_name, BY_REFERENCE);
 				else
-					rp_call.addParameter(0, BY_REFERENCE);
+					// No indicator: true NULL pointer, see comment above.
+					rp_call.addParameter(0, BY_VALUE);
 
 				if (!put_call(rp_call, false))
 					return false;
@@ -1180,7 +1198,9 @@ bool TPESQLProcessor::handle_esql_stmt(const ESQL_Command cmd, const cb_exec_sql
 				if (has_indicator)
 					p_call.addParameter(ind_name, BY_REFERENCE);
 				else
-					p_call.addParameter(0, BY_REFERENCE);
+					// See the pp_call comment above: no indicator means a
+					// true NULL pointer, not a reference to the literal 0.
+					p_call.addParameter(0, BY_VALUE);
 
 				if (!put_call(p_call, false))
 					return false;
@@ -2054,7 +2074,9 @@ bool TPESQLProcessor::put_res_host_parameters(const cb_exec_sql_stmt_ptr stmt, i
 				pp_call.addParameter(pp_scale > 0 ? -pp_scale : 0, BY_VALUE);
 				pp_call.addParameter(pp_flags, BY_VALUE);
 				pp_call.addParameter(pp->sname, BY_REFERENCE);
-				pp_call.addParameter(0, BY_REFERENCE);
+				// No indicator: true NULL pointer, not BY REFERENCE 0 -
+				// see the comment in handle_esql_stmt() above.
+				pp_call.addParameter(0, BY_VALUE);
 
 				if (!put_call(pp_call, false))
 					return false;
@@ -2080,7 +2102,9 @@ bool TPESQLProcessor::put_res_host_parameters(const cb_exec_sql_stmt_ptr stmt, i
 			if (has_indicator)
 				rp_call.addParameter(ind_name, BY_REFERENCE);
 			else
-				rp_call.addParameter(0, BY_REFERENCE);
+				// See the pp_call comment above: no indicator means a
+				// true NULL pointer, not a reference to the literal 0.
+				rp_call.addParameter(0, BY_VALUE);
 
 			if (!put_call(rp_call, false))
 				return false;
@@ -2132,7 +2156,9 @@ bool TPESQLProcessor::put_host_parameters(const cb_exec_sql_stmt_ptr stmt)
 		if (has_indicator)
 			p_call.addParameter(ind_name, BY_REFERENCE);
 		else
-			p_call.addParameter(0, BY_REFERENCE);
+			// See the pp_call comment above: no indicator means a true
+			// NULL pointer, not a reference to the literal 0.
+			p_call.addParameter(0, BY_VALUE);
 
 		if (!put_call(p_call, false))
 			return false;

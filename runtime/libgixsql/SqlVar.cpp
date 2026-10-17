@@ -404,8 +404,14 @@ void SqlVar::createCobolData(char *retstr, int datalen, int *sqlcode)
 		*((int16_t*)ind_addr) = -1;
 		return;
 	}
-	else
+	else if (ind_addr)
 	{
+		// Host variables with no null-indicator have ind_addr == nullptr
+		// (see TPESQLProcessor::put_host_parameters/put_result_params,
+		// which now emit "BY VALUE 0" instead of "BY REFERENCE 0" for
+		// that case). Writing here unconditionally used to dereference
+		// the address of GnuCOBOL's literal "0" constant instead,
+		// corrupting it on every fetch.
 		*((int16_t*)ind_addr) = 0;
 	}
 	// TODO: handle truncation-specific values (-2, etc.)?
